@@ -69,7 +69,15 @@ func (f *FacebookLogin) Login(accessToken string) (*FacebookLoginResponse, error
 		return nil, fmt.Errorf("%s", value.(string))
 	}
 
-	err = mapstructure.Decode(&responseMap, &result)
+	decoder, err := mapstructure.NewDecoder(&mapstructure.DecoderConfig{
+		TagName: "json",
+		Result:  &result,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	err = decoder.Decode(&responseMap)
 	if err != nil {
 		return nil, err
 	}

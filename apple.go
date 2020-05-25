@@ -54,7 +54,15 @@ func (a *AppleLogin) Login(token string) (*AppleLoginResponse, error) {
 
 	}
 
-	err = mapstructure.Decode(claims, &result)
+	decoder, err := mapstructure.NewDecoder(&mapstructure.DecoderConfig{
+		TagName: "json",
+		Result:  &result,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	err = decoder.Decode(&claims)
 	if err != nil {
 		return nil, err
 	}
