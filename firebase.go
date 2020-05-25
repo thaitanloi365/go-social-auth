@@ -87,8 +87,10 @@ func (a *FirebaseLogin) Login(token string) (*FirebaseLoginResponse, error) {
 		return nil, err
 	}
 
-	if result.Iss != a.Iss {
-		return nil, ErrIssuerInvalid
+	if a.Iss != "" {
+		if result.Iss != a.Iss {
+			return nil, ErrIssuerInvalid
+		}
 	}
 
 	if a.Aud != "" {

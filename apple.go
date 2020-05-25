@@ -59,8 +59,10 @@ func (a *AppleLogin) Login(token string) (*AppleLoginResponse, error) {
 		return nil, err
 	}
 
-	if result.Iss != a.Iss {
-		return nil, ErrIssuerInvalid
+	if a.Iss != "" {
+		if result.Iss != a.Iss {
+			return nil, ErrIssuerInvalid
+		}
 	}
 
 	if a.Aud != "" {
