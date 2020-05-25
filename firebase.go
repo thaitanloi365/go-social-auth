@@ -12,8 +12,8 @@ type SignInProvider string
 
 // Providers
 var (
-	PhoneSignInProvider string
-	EmailSignInProvider string
+	PhoneSignInProvider SignInProvider = "phone"
+	EmailSignInProvider SignInProvider = "email"
 )
 
 // FirebaseLoginResponse response
