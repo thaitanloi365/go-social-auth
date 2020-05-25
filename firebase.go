@@ -7,6 +7,15 @@ import (
 	"github.com/mitchellh/mapstructure"
 )
 
+// SignInProvider provider
+type SignInProvider string
+
+// Providers
+var (
+	PhoneSignInProvider string
+	EmailSignInProvider string
+)
+
 // FirebaseLoginResponse response
 type FirebaseLoginResponse struct {
 	Aud            string `json:"aud"`
@@ -24,7 +33,7 @@ type FirebaseLoginResponse struct {
 
 // FirebaseLoginInfo params
 type FirebaseLoginInfo struct {
-	SignInProvider string                  `json:"sign_in_provider"`
+	SignInProvider SignInProvider          `json:"sign_in_provider"`
 	Identities     FirebaseLoginIdentities `json:"identities"`
 }
 
@@ -35,9 +44,9 @@ type FirebaseLoginIdentities struct {
 
 // FirebaseLoginPhoneResponse params
 type FirebaseLoginPhoneResponse struct {
-	UserID            string            `json:"user_id"`
-	PhoneNumber       string            `json:"phone_number"`
-	FirebaseLoginInfo FirebaseLoginInfo `json:"firebase"`
+	UserID            string             `json:"user_id"`
+	PhoneNumber       string             `json:"phone_number"`
+	FirebaseLoginInfo *FirebaseLoginInfo `json:"firebase"`
 }
 
 // FirebaseLogin provider
