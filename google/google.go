@@ -32,6 +32,9 @@ type TokenResponse struct {
 	SignInProvider SignInProvider `json:"sign_in_provider"`
 	PhoneNumber    string         `json:"phone_number"`
 	UserID         string         `json:"user_id"`
+	FirstName      string         `json:"first_name"`
+	LastName       string         `json:"last_name"`
+	Name           string         `json:"name"`
 }
 
 type tokenResponse struct {
@@ -53,6 +56,10 @@ type tokenResponse struct {
 		} `json:"identities"`
 		SignInProvider string `json:"sign_in_provider"`
 	} `json:"firebase"`
+	Name       string `json:"name"`
+	GivenName  string `json:"given_name"`
+	FamilyName string `json:"family_name"`
+	Locale     string `json:"locale"`
 }
 
 // Config provider
@@ -119,30 +126,34 @@ func (c *Config) Login(token string) (*TokenResponse, error) {
 		return nil, err
 	}
 
-	if a.Iss != "" {
-		if result.Iss != a.Iss {
+	if c.Iss != "" {
+		if result.Iss != c.Iss {
 			return nil, auth.ErrIssuerInvalid
 		}
 	}
 
-	if a.Aud != "" {
-		if result.Aud != a.Aud {
+	if c.Aud != "" {
+		if result.Aud != c.Aud {
 			return nil, auth.ErrAudienceInvalid
 		}
 	}
 
 	var response = TokenResponse{
-		Aud:           result.Aud,
-		Sub:           result.Sub,
-		Iss:           result.Iss,
-		PhoneNumber:   result.PhoneNumber,
-		AuthTime:      result.AuthTime,
-		CHash:         result.CHash,
-		Email:         result.Email,
-		EmailVerified: result.EmailVerified,
-		Exp:           result.Exp, Iat: result.Iat, NonceSupported: result.NonceSupported,
+		Aud:            result.Aud,
+		Sub:            result.Sub,
+		Iss:            result.Iss,
+		PhoneNumber:    result.PhoneNumber,
+		AuthTime:       result.AuthTime,
+		CHash:          result.CHash,
+		Email:          result.Email,
+		EmailVerified:  result.EmailVerified,
+		Exp:            result.Exp,
+		Iat:            result.Iat,
+		NonceSupported: result.NonceSupported,
 		UserID:         result.UserID,
 		SignInProvider: Email,
+		FirstName:      result.GivenName,
+		LastName:       result.FamilyName,
 	}
 
 	if result.Firebase.SignInProvider == "phone" {
@@ -150,7 +161,7 @@ func (c *Config) Login(token string) (*TokenResponse, error) {
 
 	}
 
-	if !a.SkipExpiry {
+	if !c.SkipExpiry {
 		if response.Exp < time.Now().Unix() {
 			return nil, auth.ErrTokenExpired
 		}
