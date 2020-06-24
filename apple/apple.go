@@ -1,14 +1,15 @@
-package auth
+package appleauth
 
 import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/mitchellh/mapstructure"
+	auth "github.com/thaitanloi365/go-social-auth"
 )
 
-// AppleLoginResponse response
-type AppleLoginResponse struct {
+// TokenResponse response
+type TokenResponse struct {
 	Aud            string `json:"aud"`
 	AuthTime       int64  `json:"auth_time"`
 	CHash          string `json:"c_hash"`
@@ -21,24 +22,42 @@ type AppleLoginResponse struct {
 	Sub            string `json:"sub"`
 }
 
-// AppleLogin provider
-type AppleLogin struct {
+// Config config
+type Config struct {
 	Iss        string `json:"iss"`
 	Aud        string `json:"aud"`
 	SkipExpiry bool   `json:"skip_expiry"`
 }
 
-// NewAppleLogin new
-func NewAppleLogin() *AppleLogin {
-	return &AppleLogin{
+// New new
+func New() *Config {
+	return &Config{
 		Iss: "https://appleid.apple.com",
 		Aud: "",
 	}
 }
 
+// WithIssuer override issuer
+func (c *Config) WithIssuer(iss string) *Config {
+	c.Iss = iss
+	return c
+}
+
+// WithAudience override audience
+func (c *Config) WithAudience(aud string) *Config {
+	c.Aud = aud
+	return c
+}
+
+// WithExpiry override expiry
+func (c *Config) WithExpiry(skipExpiry bool) *Config {
+	c.SkipExpiry = skipExpiry
+	return c
+}
+
 // Login login
-func (a *AppleLogin) Login(token string) (*AppleLoginResponse, error) {
-	var result AppleLoginResponse
+func (c *Config) Login(token string) (*TokenResponse, error) {
+	var result TokenResponse
 	var claims = jwt.MapClaims{}
 	_, err := jwt.ParseWithClaims(token, claims, nil)
 	if err != nil {
@@ -55,8 +74,9 @@ func (a *AppleLogin) Login(token string) (*AppleLoginResponse, error) {
 	}
 
 	decoder, err := mapstructure.NewDecoder(&mapstructure.DecoderConfig{
-		TagName: "json",
-		Result:  &result,
+		TagName:          "json",
+		Result:           &result,
+		WeaklyTypedInput: true,
 	})
 	if err != nil {
 		return nil, err
@@ -67,21 +87,21 @@ func (a *AppleLogin) Login(token string) (*AppleLoginResponse, error) {
 		return nil, err
 	}
 
-	if a.Iss != "" {
-		if result.Iss != a.Iss {
-			return nil, ErrIssuerInvalid
+	if c.Iss != "" {
+		if result.Iss != c.Iss {
+			return nil, auth.ErrIssuerInvalid
 		}
 	}
 
-	if a.Aud != "" {
-		if result.Aud != a.Aud {
-			return nil, ErrAudienceInvalid
+	if c.Aud != "" {
+		if result.Aud != c.Aud {
+			return nil, auth.ErrAudienceInvalid
 		}
 	}
 
-	if !a.SkipExpiry {
+	if !c.SkipExpiry {
 		if result.Exp < time.Now().Unix() {
-			return nil, ErrTokenExpired
+			return nil, auth.ErrTokenExpired
 		}
 	}
 

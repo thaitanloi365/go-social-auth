@@ -1,0 +1,18 @@
+package appleauth
+
+import (
+	"fmt"
+	"testing"
+)
+
+func TestLoginApple(t *testing.T) {
+	var token = "eyJraWQiOiJlWGF1bm1MIiwiYWxnIjoiUlMyNTYifQ.eyJpc3MiOiJodHRwczovL2FwcGxlaWQuYXBwbGUuY29tIiwiYXVkIjoiY29tLm5vcnRoZ2F0ZS5oYXBsby5kZXYiLCJleHAiOjE1ODk0MjQ0NDMsImlhdCI6MTU4OTQyMzg0Mywic3ViIjoiMDAwMjQ2LjNkZjBhYWQ5ZTc2NzQwOWFiM2Q1YjhiN2JmMThkODlmLjA5NTYiLCJjX2hhc2giOiJHSkltY3ZBSXFOTG1FQnpTRlhYYWJ3IiwiZW1haWwiOiJodXlsYWlwaHVvY0BnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6InRydWUiLCJhdXRoX3RpbWUiOjE1ODk0MjM4NDMsIm5vbmNlX3N1cHBvcnRlZCI6dHJ1ZX0.BydXOomLMe36nc7ENZMErQGmsc9R_1_ZqKWdgjoGXAAZB0CgTvT48naJLhawJC_N183Q2BHlukMakiJ_46S7iEnJID7UntAKhl3lJs0Rf2_etGZIZtOxl7eMaeM3Ey2h5FEPslIEKFY2ybjuhMut-csfxsmpo9FVluHi5qDAL6ld7xRCAyFKvRmoK-YkHD3_-uTihJffaqK0dc6R33UK7BG_RbkvzvmTvZKejg4OSG4MxVAPoyhPqKf7uW0Q_FVPUgCbqp2S_Tp81FpWkYnwz8PAm9WzxBRSWxfswvfjzNHCxyw3uZJEgKpAMJvh9K1WfFZvm1QCR_IrpPRrwzwTqw"
+	var appleauth = New().WithExpiry(true)
+	result, err := appleauth.Login(token)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println("result", result)
+
+}

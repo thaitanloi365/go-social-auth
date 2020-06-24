@@ -1,15 +1,14 @@
-package auth
+package googleauth
 
 import (
 	"fmt"
 	"testing"
 )
 
-func TestLoginFirebase(t *testing.T) {
+func TestLoginGoogle(t *testing.T) {
 	var token = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjgyMmM1NDk4YTcwYjc0MjQ5NzI2ZDhmYjYxODlkZWI3NGMzNWM4MGEiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vbm90aWZpY2F0aW9uLWRlbW8tMjVjMTEiLCJhdWQiOiJub3RpZmljYXRpb24tZGVtby0yNWMxMSIsImF1dGhfdGltZSI6MTU5MDQyODAzMiwidXNlcl9pZCI6ImdidWZ6eHdTOTBYOHpsS2FmeWtQWnlxZU1BaDEiLCJzdWIiOiJnYnVmenh3UzkwWDh6bEthZnlrUFp5cWVNQWgxIiwiaWF0IjoxNTkwNDI4MDMyLCJleHAiOjE1OTA0MzE2MzIsInBob25lX251bWJlciI6Iis4NDM3ODMwNjg5MyIsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsicGhvbmUiOlsiKzg0Mzc4MzA2ODkzIl19LCJzaWduX2luX3Byb3ZpZGVyIjoicGhvbmUifX0.YnB0CruLFP5ZhLVI_FqoewI_7HjO6UZuy8bO1KR2aSzbYArFUZKY_o3_hw2Za6MVjprW8nOFWGmk0wWyQW-7SZ1OUn1QNyWideDnwxQ4blaNIO_84gdgmpwdfx99n-hNRG1fvNAr3tVPFiMa5rSwopIfmJzCBP9j-aoZbqumw3HJwtDxNvZvha_Gj_Nu97Jk0Y87oJelD6AFiHVXJzlZ3qStluMR1gujzdo8jrf4eGOWW3H9Vvp_jZlYh6iQ8ddvnj-muP_kCjCZbRwo0bMKQvzVqvNpSqf0ewaHu1pgRYhUNTo8MAR4wt2wJcecEiauXSZru2CFCqICG_1QpdFiSg"
-	var firebaseAuth = NewFirebaseLogin()
-	firebaseAuth.Iss = ""
-	result, err := firebaseAuth.Login(token)
+	var googleauth = New().WithIssuer("").WithExpiry(true)
+	result, err := googleauth.Login(token)
 	if err != nil {
 		panic(err)
 	}

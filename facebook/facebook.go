@@ -1,4 +1,4 @@
-package auth
+package facebookauth
 
 import (
 	"encoding/json"
@@ -9,10 +9,11 @@ import (
 	"strings"
 
 	"github.com/mitchellh/mapstructure"
+	auth "github.com/thaitanloi365/go-social-auth"
 )
 
-// FacebookLoginResponse response
-type FacebookLoginResponse struct {
+// TokenResponse response
+type TokenResponse struct {
 	ID        string `json:"id"`
 	Email     string `json:"email"`
 	FirstName string `json:"first_name"`
@@ -20,18 +21,30 @@ type FacebookLoginResponse struct {
 	Name      string `json:"name"`
 }
 
-// FacebookLogin provider
-type FacebookLogin struct {
-	Scope []string `json:"scope"`
-	URL   string   `json:"url"`
+// Config config
+type Config struct {
+	Scopes []string `json:"scopes"`
+	URL    string   `json:"url"`
 }
 
-// NewFacebookLogin new
-func NewFacebookLogin() *FacebookLogin {
-	return &FacebookLogin{
-		URL:   "https://graph.facebook.com",
-		Scope: []string{"id", "email", "first_name", "last_name", "name"},
+// New new
+func New() *Config {
+	return &Config{
+		URL:    "https://graph.facebook.com",
+		Scopes: []string{"id", "email", "first_name", "last_name", "name"},
 	}
+}
+
+// WithURL override url
+func (c *Config) WithURL(url string) *Config {
+	c.URL = url
+	return c
+}
+
+// WithScopes override scopes
+func (c *Config) WithScopes(scopes []string) *Config {
+	c.Scopes = scopes
+	return c
 }
 
 func isValidFacebookToken(accessToken string) bool {
@@ -41,13 +54,13 @@ func isValidFacebookToken(accessToken string) bool {
 }
 
 // Login login
-func (f *FacebookLogin) Login(accessToken string) (*FacebookLoginResponse, error) {
-	var result FacebookLoginResponse
+func (c *Config) Login(accessToken string) (*TokenResponse, error) {
+	var result TokenResponse
 	if !isValidFacebookToken(accessToken) {
-		return nil, ErrTokenInvalid
+		return nil, auth.ErrTokenInvalid
 	}
-	var scope = strings.Join(f.Scope, ",")
-	var url = fmt.Sprintf("%s/me?fields=%s&access_token=%s", scope, f.URL, url.QueryEscape(accessToken))
+	var scopes = strings.Join(c.Scopes, ",")
+	var url = fmt.Sprintf("%s/me?fields=%s&access_token=%s", c.URL, scopes, url.QueryEscape(accessToken))
 	resp, err := http.Get(url)
 	if err != nil {
 		return nil, err
