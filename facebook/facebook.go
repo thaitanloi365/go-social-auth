@@ -8,7 +8,6 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/mitchellh/mapstructure"
 	auth "github.com/thaitanloi365/go-social-auth"
 )
 
@@ -78,19 +77,21 @@ func (c *Config) Login(accessToken string) (*TokenResponse, error) {
 		return nil, err
 	}
 
+	if value, ok := responseMap["error"].(map[string]interface{}); ok {
+		var e Err
+		err = auth.DecodeTypedWeakly(&value, &e)
+		if err != nil {
+			return nil, err
+		}
+
+		return nil, &e
+	}
+
 	if value, ok := responseMap["error_description"]; ok {
 		return nil, fmt.Errorf("%s", value.(string))
 	}
 
-	decoder, err := mapstructure.NewDecoder(&mapstructure.DecoderConfig{
-		TagName: "json",
-		Result:  &result,
-	})
-	if err != nil {
-		return nil, err
-	}
-
-	err = decoder.Decode(&responseMap)
+	err = auth.DecodeTypedWeakly(&responseMap, &result)
 	if err != nil {
 		return nil, err
 	}

@@ -4,7 +4,6 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/mitchellh/mapstructure"
 	auth "github.com/thaitanloi365/go-social-auth"
 )
 
@@ -113,15 +112,7 @@ func (c *Config) Login(token string) (*TokenResponse, error) {
 
 	}
 
-	decoder, err := mapstructure.NewDecoder(&mapstructure.DecoderConfig{
-		TagName: "json",
-		Result:  &result,
-	})
-	if err != nil {
-		return nil, err
-	}
-
-	err = decoder.Decode(&claims)
+	err = auth.DecodeTypedWeakly(&claims, &result)
 	if err != nil {
 		return nil, err
 	}
