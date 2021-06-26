@@ -35,20 +35,34 @@ type TokenResponse struct {
 	FirstName      string         `json:"first_name"`
 	LastName       string         `json:"last_name"`
 	Name           string         `json:"name"`
+	Picture        string         `json:"picture"`
+	Locale         string         `json:"vi"`
+	AtHash         string         `json:"at_hash"`
 }
 
 type tokenResponse struct {
-	Iss            string `json:"iss"`
-	Aud            string `json:"aud"`
+	// Login mail
+	AtHash        string `json:"at_hash"`
+	Aud           string `json:"aud"`
+	Azp           string `json:"azp"`
+	Email         string `json:"email"`
+	EmailVerified bool   `json:"email_verified"`
+	Exp           int64  `json:"exp"`
+	FamilyName    string `json:"family_name"`
+	GivenName     string `json:"given_name"`
+	Iat           int64  `json:"iat"`
+	Iss           string `json:"iss"`
+	Jti           string `json:"jti"`
+	Locale        string `json:"locale"`
+	Name          string `json:"name"`
+	Picture       string `json:"picture"`
+	Sub           string `json:"sub"`
+
+	// Login Phone
 	AuthTime       int64  `json:"auth_time"`
 	NonceSupported bool   `json:"nonce_supported"`
 	CHash          string `json:"c_hash"`
-	Email          string `json:"email"`
-	EmailVerified  bool   `json:"email_verified"`
 	UserID         string `json:"user_id"`
-	Sub            string `json:"sub"`
-	Iat            int64  `json:"iat"`
-	Exp            int64  `json:"exp"`
 	PhoneNumber    string `json:"phone_number"`
 	Firebase       struct {
 		Identities struct {
@@ -56,10 +70,6 @@ type tokenResponse struct {
 		} `json:"identities"`
 		SignInProvider string `json:"sign_in_provider"`
 	} `json:"firebase"`
-	Name       string `json:"name"`
-	GivenName  string `json:"given_name"`
-	FamilyName string `json:"family_name"`
-	Locale     string `json:"locale"`
 }
 
 // Config provider
@@ -146,6 +156,10 @@ func (c *Config) Login(token string) (*TokenResponse, error) {
 		SignInProvider: Email,
 		FirstName:      result.GivenName,
 		LastName:       result.FamilyName,
+		Name:           result.Name,
+		Picture:        result.Picture,
+		Locale:         result.Locale,
+		AtHash:         result.AtHash,
 	}
 
 	if result.Firebase.SignInProvider == "phone" {
