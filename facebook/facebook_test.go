@@ -1,19 +1,17 @@
-package facebookauth
+package facebook
 
 import (
-	"fmt"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/thaitanloi365/go-social-auth/utils"
 )
 
 func TestLoginFacebook(t *testing.T) {
-	// var token = "EAACejEGlyekBAKoV7PZAIo3qj8e7VcQZCihlW0E9GnjlioIcIt8vEnAb9KNJcpi8zSCZA0H42ZAa7YvGz3ctgqMj78fZARYCBiPikLZBZCsAiGakXA2iXUT8JPVIoGlI0ot2fWlgk6ZAxzbZB1j5qWNden5pwN27GyHwh5XSizffDxVAl1PZCZAVfquLE6MfGcs2iP0ZC5UbNumE7NM50obI0HkPQS90pt0LYSdbsKf2qtBIZBAZDZD"
-	var token = "asdf"
-	var facebookauth = New()
+	var token = "EAAC2I0ITd0MBAARDwFhCZCY9WI7vTgkiQ5jjiRFyxKiO2vPeYvD2AzIR9TQoHoSZAkLWCttZCEtjV9bd4jWZBMvvFhkniPyYrG8HTSCIUPdcuo9JBpqVY2dOM4nskUK1vFeVPx5fTrtmoQOd3j0qZA98pzW1tT1584MUDuBkCtJQBBQhjtVgH3WZAde0BZCZANQjAbdp7WvIxhZCoV94rvUXz"
+	var facebookauth = New().WithAppID("200262548682563")
 	result, err := facebookauth.Login(token)
-	if err != nil {
-		fmt.Println("eeee", err)
-		panic(err.Error())
-	}
+	assert.NoError(t, err)
 
-	fmt.Println("result", result)
+	utils.PrintJSON(result)
 }

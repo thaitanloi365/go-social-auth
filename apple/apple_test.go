@@ -1,4 +1,4 @@
-package appleauth
+package apple
 
 import (
 	"fmt"

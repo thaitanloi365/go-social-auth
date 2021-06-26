@@ -1,4 +1,4 @@
-package auth
+package errs
 
 // Error err
 type Error struct {

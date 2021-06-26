@@ -1,4 +1,4 @@
-package facebookauth
+package facebook
 
 // Err err
 type Err struct {

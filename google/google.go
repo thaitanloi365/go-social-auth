@@ -1,10 +1,11 @@
-package googleauth
+package google
 
 import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
-	auth "github.com/thaitanloi365/go-social-auth"
+	"github.com/thaitanloi365/go-social-auth/errs"
+	"github.com/thaitanloi365/go-social-auth/utils"
 )
 
 // SignInProvider provider
@@ -112,20 +113,20 @@ func (c *Config) Login(token string) (*TokenResponse, error) {
 
 	}
 
-	err = auth.DecodeTypedWeakly(&claims, &result)
+	err = utils.DecodeTypedWeakly(&claims, &result)
 	if err != nil {
 		return nil, err
 	}
 
 	if c.Iss != "" {
 		if result.Iss != c.Iss {
-			return nil, auth.ErrIssuerInvalid
+			return nil, errs.ErrIssuerInvalid
 		}
 	}
 
 	if c.Aud != "" {
 		if result.Aud != c.Aud {
-			return nil, auth.ErrAudienceInvalid
+			return nil, errs.ErrAudienceInvalid
 		}
 	}
 
@@ -154,7 +155,7 @@ func (c *Config) Login(token string) (*TokenResponse, error) {
 
 	if !c.SkipExpiry {
 		if response.Exp < time.Now().Unix() {
-			return nil, auth.ErrTokenExpired
+			return nil, errs.ErrTokenExpired
 		}
 	}
 
