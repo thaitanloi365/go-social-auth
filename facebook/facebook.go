@@ -18,6 +18,7 @@ type TokenResponse struct {
 	FirstName string `json:"first_name"`
 	LastName  string `json:"last_name"`
 	Name      string `json:"name"`
+	Link      string `json:"link"`
 }
 
 type debugTokenResponse struct {
@@ -45,7 +46,7 @@ type Config struct {
 func New() *Config {
 	return &Config{
 		URL:    "https://graph.facebook.com",
-		Scopes: []string{"id", "email", "first_name", "last_name", "name"},
+		Scopes: []string{"id", "email", "first_name", "last_name", "name", "link"},
 	}
 }
 
