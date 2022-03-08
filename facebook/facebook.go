@@ -13,12 +13,24 @@ import (
 )
 
 type TokenResponse struct {
-	ID        string `json:"id"`
-	Email     string `json:"email"`
-	FirstName string `json:"first_name"`
-	LastName  string `json:"last_name"`
-	Name      string `json:"name"`
-	Link      string `json:"link"`
+	ID        string  `json:"id"`
+	Email     string  `json:"email"`
+	FirstName string  `json:"first_name"`
+	LastName  string  `json:"last_name"`
+	Name      string  `json:"name"`
+	Link      string  `json:"link"`
+	Picture   Picture `json:"picture"`
+}
+
+type Picture struct {
+	Data PictureData `json:"data"`
+}
+
+type PictureData struct {
+	Height       float64 `json:"height"`
+	IsSilhouette string  `json:"is_silhouette"`
+	URL          string  `json:"url"`
+	Width        float64 `json:"width"`
 }
 
 type debugTokenResponse struct {
@@ -46,7 +58,7 @@ type Config struct {
 func New() *Config {
 	return &Config{
 		URL:    "https://graph.facebook.com",
-		Scopes: []string{"id", "email", "first_name", "last_name", "name", "link"},
+		Scopes: []string{"id", "email", "first_name", "last_name", "name", "link", "picture"},
 	}
 }
 
