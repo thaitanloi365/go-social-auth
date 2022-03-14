@@ -13,13 +13,9 @@ import (
 )
 
 type TokenResponse struct {
-	ID        string  `json:"id"`
-	Email     string  `json:"email"`
-	FirstName string  `json:"first_name"`
-	LastName  string  `json:"last_name"`
-	Name      string  `json:"name"`
-	Link      string  `json:"link"`
-	Picture   Picture `json:"picture"`
+	ID          string `json:"id"`
+	Username    string `json:"username"`
+	AccountType string `json:"account_type"`
 }
 
 type Picture struct {
