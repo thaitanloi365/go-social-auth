@@ -57,8 +57,8 @@ type Config struct {
 
 func New() *Config {
 	return &Config{
-		URL:    "https://graph.facebook.com",
-		Scopes: []string{"id", "email", "first_name", "last_name", "name", "link", "picture"},
+		URL:    "https://graph.instagram.com",
+		Scopes: []string{"id", "account_type", "username"},
 	}
 }
 
@@ -76,7 +76,7 @@ func (c *Config) WithScopes(scopes []string) *Config {
 	return c
 }
 
-func (c *Config) isValidFacebookToken(accessToken string) bool {
+func (c *Config) isValidInstagramToken(accessToken string) bool {
 	if c.AppID != "" {
 		var url = fmt.Sprintf("%s/debug_token?input_token=%s&access_token=%s", c.URL, url.QueryEscape(accessToken), url.QueryEscape(accessToken))
 		resp, err := http.Get(url)
@@ -102,7 +102,7 @@ func (c *Config) isValidFacebookToken(accessToken string) bool {
 // Login login
 func (c *Config) Login(accessToken string) (*TokenResponse, error) {
 	var result TokenResponse
-	if !c.isValidFacebookToken(accessToken) {
+	if !c.isValidInstagramToken(accessToken) {
 		return nil, errs.ErrTokenInvalid
 	}
 	var scopes = strings.Join(c.Scopes, ",")
