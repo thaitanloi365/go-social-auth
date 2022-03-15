@@ -8,9 +8,19 @@ import (
 )
 
 func TestLoginInstagram(t *testing.T) {
-	var token = "AQBVsrUQLpARvTXGyXtvKndxYeDRLANlYBZWEQCZy1DwqiAhbS5FfY9Sg_ArdCvl58zGesQUKjK9Eip5JaExM5VnlGAldMkvfg1aAZkje0WCQcXdi8kS9YX9E3XqMs6-HO0uaD7wO2ak9i7rK6EthH8STsVBLbZ6xYSjRO_0clBHkMmRQqqaWmveCQUv0ZAbOQxf2ILqrJTY_CXry1bp-jL_4QKi1tLK3geRmlDOyk2L_w"
-	var instagramauth = New().WithAppID("650961669571775")
+	var token = "IGQVJWdXN0Q0NoTXpKczlqNDFZARzczd1pid1NPanVJM0JVRE5JQVZA5NEVSbkFqN2tPWTdJLXhBTG1YUW5HOUZAMRDZAMOWNWdTY3NGpJYVBlRkpzN2EyRnNrNGhLaDB3SHhhdC15TktjUGhwaDNBYXhHN0t5ZAURseGZAZAWnRv"
+	var instagramauth = New()
 	result, err := instagramauth.Login(token)
+	assert.NoError(t, err)
+
+	utils.PrintJSON(result)
+}
+
+func TestGetAccessTokenInstagram(t *testing.T) {
+	var code = "AQClPRTwVutS9LC-bEC4y1Ms1X1i01ETGNLPFByYsRFqIBgfS5Ytwy6kzv2wAz_eRS3zsqmzz2IRPZsYFrRCRjityuFl5WdTOh5iGEUby7CeoPRAVF70ro-3y_gPmAifvACnBB_pqMrzTvx0cW8enApvT2KHXPV-BYvYzd_7KdsjRssKaOf99YUw-eJ2lGQAdSUMONUEKjv9NhLKtN6TvEr62bSGsN2wsyEuMi-AiuNOtQ"
+	var redirectUri = "https://seller-staging.ezielog.com/"
+	var instagramauth = New().WithAppID("test").WithAppSecret("test")
+	result, err := instagramauth.GetAccessToken(code, redirectUri)
 	assert.NoError(t, err)
 
 	utils.PrintJSON(result)

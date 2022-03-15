@@ -46,14 +46,17 @@ type debugTokenResponse struct {
 }
 
 type Config struct {
-	Scopes []string `json:"scopes"`
-	URL    string   `json:"url"`
-	AppID  string   `json:"app_id"`
+	Scopes    []string `json:"scopes"`
+	URL       string   `json:"url"`
+	APIURL    string   `json:"api_url"`
+	AppID     string   `json:"app_id"`
+	AppSecret string   `json:"app_secret"`
 }
 
 func New() *Config {
 	return &Config{
 		URL:    "https://graph.instagram.com",
+		APIURL: "https://api.instagram.com",
 		Scopes: []string{"id", "account_type", "username"},
 	}
 }
@@ -67,6 +70,12 @@ func (c *Config) WithAppID(id string) *Config {
 	c.AppID = id
 	return c
 }
+
+func (c *Config) WithAppSecret(secret string) *Config {
+	c.AppSecret = secret
+	return c
+}
+
 func (c *Config) WithScopes(scopes []string) *Config {
 	c.Scopes = scopes
 	return c
@@ -131,6 +140,65 @@ func (c *Config) Login(accessToken string) (*TokenResponse, error) {
 	}
 
 	if value, ok := responseMap["error_description"]; ok {
+		return nil, fmt.Errorf("%s", value.(string))
+	}
+
+	err = utils.DecodeTypedWeakly(&responseMap, &result)
+	if err != nil {
+		return nil, err
+	}
+
+	return &result, err
+}
+
+type GetAccessTokenResponse struct {
+	UserID      string `json:"user_id"`
+	AccessToken string `json:"access_token"`
+}
+
+// GetAccessToken GetAccessToken
+func (c *Config) GetAccessToken(code string, redirectUri string) (*GetAccessTokenResponse, error) {
+	var result GetAccessTokenResponse
+
+	var URL = fmt.Sprintf("%s/oauth/access_token", c.APIURL)
+	var form = url.Values{
+		"client_id":     {c.AppID},
+		"client_secret": {c.AppSecret},
+		"code":          {code},
+		"grant_type":    {"authorization_code"},
+		"redirect_uri":  {redirectUri},
+	}
+	resp, err := http.PostForm(URL, form)
+
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	responseData, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+
+		return nil, err
+	}
+
+	var responseMap map[string]interface{}
+	err = json.Unmarshal(responseData, &responseMap)
+	if err != nil {
+
+		return nil, err
+	}
+
+	if value, ok := responseMap["code"].(map[string]interface{}); ok {
+		var e Err
+		err = utils.DecodeTypedWeakly(&value, &e)
+		if err != nil {
+			return nil, err
+		}
+
+		return nil, &e
+	}
+
+	if value, ok := responseMap["error_message"]; ok {
 		return nil, fmt.Errorf("%s", value.(string))
 	}
 
